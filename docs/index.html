@@ -4,62 +4,903 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Okay Arcade Documentation</title>
-    <meta http-equiv="refresh" content="0; url=index.md">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
+        :root {
+            --primary: #6c5ce7;
+            --primary-dark: #5a4ad1;
+            --secondary: #a29bfe;
+            --accent: #00cec9;
+            --bg-dark: #0f0c29;
+            --bg-darker: #0a0818;
+            --bg-card: #1a1a2e;
+            --bg-card-hover: #252542;
+            --text: #f9f9f9;
+            --text-muted: #8892b0;
+            --border: rgba(255, 255, 255, 0.1);
+            --gradient: linear-gradient(135deg, #6c5ce7, #00cec9);
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-            color: #fff;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
             min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(15, 12, 41, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 15px 30px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
         }
-        .container {
-            text-align: center;
-            padding: 40px;
-        }
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, #6c5ce7, #00cec9);
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        p {
-            color: #a29bfe;
-            margin-bottom: 30px;
+
+        .logo i {
+            -webkit-text-fill-color: var(--accent);
+            font-size: 1.3rem;
         }
-        a {
-            color: #00cec9;
-            text-decoration: none;
-            padding: 15px 30px;
-            border: 2px solid #00cec9;
-            border-radius: 30px;
-            display: inline-block;
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border);
+            border-radius: 25px;
+            padding: 10px 20px 10px 45px;
+            color: var(--text);
+            font-size: 0.9rem;
+            width: 280px;
+            outline: none;
             transition: all 0.3s;
         }
-        a:hover {
-            background: #00cec9;
-            color: #0f0c29;
+
+        .search-box input:focus {
+            border-color: var(--accent);
+            background: rgba(255, 255, 255, 0.12);
         }
+
+        .search-box i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            margin-top: 10px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .search-results.active {
+            display: block;
+        }
+
+        .search-result-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.2s;
+        }
+
+        .search-result-item:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+
+        .search-result-item .title {
+            color: var(--accent);
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .search-result-item .preview {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .back-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: var(--accent);
+        }
+
+        /* Layout */
+        .layout {
+            display: flex;
+            margin-top: 70px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            height: calc(100vh - 70px);
+            position: fixed;
+            top: 70px;
+            left: 0;
+            background: var(--bg-darker);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            padding: 20px 0;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        .nav-section {
+            margin-bottom: 10px;
+        }
+
+        .nav-section-title {
+            padding: 12px 25px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 25px;
+            color: var(--text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover {
+            background: rgba(108, 92, 231, 0.1);
+            color: var(--accent);
+        }
+
+        .nav-link.active {
+            background: rgba(108, 92, 231, 0.15);
+            border-left-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .nav-link i {
+            width: 18px;
+            color: var(--text-muted);
+        }
+
+        .nav-link.active i {
+            color: var(--accent);
+        }
+
+        /* Main Content */
+        .main {
+            flex: 1;
+            margin-left: 280px;
+            padding: 40px 60px;
+            max-width: 900px;
+            min-height: calc(100vh - 70px);
+        }
+
+        .content {
+            line-height: 1.8;
+        }
+
+        .content h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .content h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 40px 0 20px;
+            color: var(--accent);
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .content h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 30px 0 15px;
+            color: var(--secondary);
+        }
+
+        .content p {
+            margin-bottom: 15px;
+            color: var(--text-muted);
+        }
+
+        .content ul, .content ol {
+            margin: 15px 0;
+            padding-left: 25px;
+            color: var(--text-muted);
+        }
+
+        .content li {
+            margin-bottom: 8px;
+        }
+
+        .content a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .content a:hover {
+            color: var(--primary);
+            text-decoration: underline;
+        }
+
+        .content code {
+            background: rgba(108, 92, 231, 0.2);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+            color: var(--accent);
+        }
+
+        .content pre {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .content pre code {
+            background: none;
+            padding: 0;
+            color: var(--text);
+        }
+
+        .content blockquote {
+            background: rgba(108, 92, 231, 0.1);
+            border-left: 4px solid var(--primary);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .content th, .content td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .content th {
+            background: rgba(108, 92, 231, 0.15);
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .content td {
+            color: var(--text-muted);
+        }
+
+        .content hr {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 30px 0;
+        }
+
+        /* Home Page Cards */
+        .home-hero {
+            text-align: center;
+            padding: 40px 0 50px;
+        }
+
+        .home-hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .doc-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .doc-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 40px rgba(108, 92, 231, 0.2);
+        }
+
+        .doc-card i {
+            font-size: 2rem;
+            color: var(--accent);
+            margin-bottom: 15px;
+        }
+
+        .doc-card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text);
+        }
+
+        .doc-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        /* Mobile Menu Toggle */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 1024px) {
+            .main {
+                padding: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+                z-index: 999;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 20px;
+            }
+
+            .search-box input {
+                width: 200px;
+            }
+
+            .header-actions .back-link span {
+                display: none;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .content h1 {
+                font-size: 2rem;
+            }
+        }
+
+        /* Overlay for mobile */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 998;
+            display: none;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        /* Loading state */
         .loading {
-            margin-top: 20px;
-            color: #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px;
+            color: var(--text-muted);
+        }
+
+        .loading i {
+            margin-right: 10px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Okay Arcade Docs</h1>
-        <p>Redirecting to documentation...</p>
-        <a href="index.md">Click here if not redirected</a>
-        <p class="loading">If you're viewing this on GitHub, the documentation is in Markdown format.</p>
+    <!-- Header -->
+    <header class="header">
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <a href="#" class="logo" onclick="loadPage('home'); return false;">
+                <i class="fas fa-gamepad"></i>
+                <span>Okay Arcade Docs</span>
+            </a>
+        </div>
+        <div class="header-actions">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Search documentation...">
+                <div class="search-results" id="searchResults"></div>
+            </div>
+            <a href="../index.html" class="back-link">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to Site</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- Overlay for mobile -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Layout -->
+    <div class="layout">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <div class="nav-section">
+                <div class="nav-section-title">Getting Started</div>
+                <a href="#" class="nav-link active" data-page="home" onclick="loadPage('home'); return false;">
+                    <i class="fas fa-home"></i> Home
+                </a>
+                <a href="#" class="nav-link" data-page="getting-started" onclick="loadPage('getting-started'); return false;">
+                    <i class="fas fa-rocket"></i> Quick Start
+                </a>
+                <a href="#" class="nav-link" data-page="installation" onclick="loadPage('installation'); return false;">
+                    <i class="fas fa-download"></i> Installation
+                </a>
+                <a href="#" class="nav-link" data-page="deployment" onclick="loadPage('deployment'); return false;">
+                    <i class="fas fa-cloud-upload-alt"></i> Deployment
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Customization</div>
+                <a href="#" class="nav-link" data-page="customization/adding-games" onclick="loadPage('customization/adding-games'); return false;">
+                    <i class="fas fa-plus-circle"></i> Adding Games
+                </a>
+                <a href="#" class="nav-link" data-page="customization/branding" onclick="loadPage('customization/branding'); return false;">
+                    <i class="fas fa-paint-brush"></i> Branding
+                </a>
+                <a href="#" class="nav-link" data-page="customization/categories" onclick="loadPage('customization/categories'); return false;">
+                    <i class="fas fa-folder"></i> Categories
+                </a>
+                <a href="#" class="nav-link" data-page="customization/themes" onclick="loadPage('customization/themes'); return false;">
+                    <i class="fas fa-palette"></i> Themes
+                </a>
+                <a href="#" class="nav-link" data-page="customization/seo" onclick="loadPage('customization/seo'); return false;">
+                    <i class="fas fa-chart-line"></i> SEO
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Editions</div>
+                <a href="#" class="nav-link" data-page="editions/main" onclick="loadPage('editions/main'); return false;">
+                    <i class="fas fa-star"></i> Main Edition
+                </a>
+                <a href="#" class="nav-link" data-page="editions/simple" onclick="loadPage('editions/simple'); return false;">
+                    <i class="fas fa-minus-circle"></i> Simple UI
+                </a>
+                <a href="#" class="nav-link" data-page="editions/terminal" onclick="loadPage('editions/terminal'); return false;">
+                    <i class="fas fa-terminal"></i> Terminal
+                </a>
+                <a href="#" class="nav-link" data-page="editions/nogames" onclick="loadPage('editions/nogames'); return false;">
+                    <i class="fas fa-file"></i> No Games
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Advanced</div>
+                <a href="#" class="nav-link" data-page="advanced/pages" onclick="loadPage('advanced/pages'); return false;">
+                    <i class="fas fa-file-alt"></i> Adding Pages
+                </a>
+                <a href="#" class="nav-link" data-page="advanced/pwa" onclick="loadPage('advanced/pwa'); return false;">
+                    <i class="fas fa-wifi"></i> PWA & Offline
+                </a>
+                <a href="#" class="nav-link" data-page="advanced/analytics" onclick="loadPage('advanced/analytics'); return false;">
+                    <i class="fas fa-chart-bar"></i> Analytics
+                </a>
+                <a href="#" class="nav-link" data-page="advanced/custom-domain" onclick="loadPage('advanced/custom-domain'); return false;">
+                    <i class="fas fa-globe"></i> Custom Domain
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Help</div>
+                <a href="#" class="nav-link" data-page="troubleshooting/faq" onclick="loadPage('troubleshooting/faq'); return false;">
+                    <i class="fas fa-question-circle"></i> FAQ
+                </a>
+                <a href="#" class="nav-link" data-page="troubleshooting/issues" onclick="loadPage('troubleshooting/issues'); return false;">
+                    <i class="fas fa-bug"></i> Known Issues
+                </a>
+                <a href="#" class="nav-link" data-page="troubleshooting/help" onclick="loadPage('troubleshooting/help'); return false;">
+                    <i class="fas fa-life-ring"></i> Getting Help
+                </a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main">
+            <div class="content" id="content">
+                <!-- Content loads here -->
+            </div>
+        </main>
     </div>
+
+    <script>
+        // Documentation search index
+        const searchIndex = [
+            { page: 'home', title: 'Home', content: 'Welcome to Okay Arcade Documentation. Your complete guide to customizing and deploying your gaming arcade website.' },
+            { page: 'getting-started', title: 'Quick Start Guide', content: 'Get your gaming arcade running in under 5 minutes. Download the template, customize your site, add games, and deploy.' },
+            { page: 'installation', title: 'Installation Guide', content: 'Complete installation instructions. Download ZIP, clone with git, or fork on GitHub. Set up local development server.' },
+            { page: 'deployment', title: 'Deployment Guide', content: 'Deploy your arcade to GitHub Pages, Netlify, Vercel, or traditional hosting. Free hosting options included.' },
+            { page: 'customization/adding-games', title: 'Adding Games', content: 'Learn how to add your own games. Game data structure, embed URLs, thumbnails, categories. Find game embed URLs.' },
+            { page: 'customization/branding', title: 'Branding & Customization', content: 'Make Arcade truly yours. Change site name, update URLs, customize colors, fonts, favicon, logo, footer.' },
+            { page: 'customization/categories', title: 'Categories Guide', content: 'Customize game categories. Default categories, adding new categories, Font Awesome icons, category filtering.' },
+            { page: 'customization/themes', title: 'Theme Customization', content: 'Customize look and feel. Dark/light mode, color schemes, gradients, card styles, typography, animations.' },
+            { page: 'customization/seo', title: 'SEO Optimization', content: 'Optimize for search engines. Meta tags, Open Graph, Twitter Cards, structured data, sitemap, analytics.' },
+            { page: 'editions/main', title: 'Main Edition', content: 'Full-featured gaming arcade. Glassmorphism UI, dark/light theme, search, filters, favorites, game modal.' },
+            { page: 'editions/simple', title: 'Simple UI Edition', content: 'Clean, minimal design. Light theme, simplified game cards, compact search, essential features only.' },
+            { page: 'editions/terminal', title: 'Terminal Edition', content: 'CLI-style interface. Command-based navigation, text-based listing, keyboard-first, dark terminal theme.' },
+            { page: 'editions/nogames', title: 'No Games Edition', content: 'Empty template. Complete arcade UI with no pre-loaded games. Perfect for building from scratch.' },
+            { page: 'advanced/pages', title: 'Adding New Pages', content: 'Create additional pages. Privacy Policy, Terms, Contact, About, FAQ. Modal dialogs, HTML content.' },
+            { page: 'advanced/pwa', title: 'PWA & Offline Support', content: 'Enable offline support. Service worker, manifest file, offline detection, PWA installation.' },
+            { page: 'advanced/analytics', title: 'Analytics Integration', content: 'Track visitors. Google Analytics 4, Google Tag Manager, Plausible, Cloudflare Analytics, custom tracking.' },
+            { page: 'advanced/custom-domain', title: 'Custom Domain Setup', content: 'Use your own domain. DNS configuration for GitHub Pages, Netlify, Vercel. SSL/HTTPS certificates.' },
+            { page: 'troubleshooting/faq', title: 'FAQ', content: 'Frequently asked questions. Installation, customization, games, technical issues, deployment.' },
+            { page: 'troubleshooting/issues', title: 'Known Issues', content: 'List of known issues and workarounds. Games not loading, favorites, themes, browser-specific issues.' },
+            { page: 'troubleshooting/help', title: 'Getting Help', content: 'Resources and support. Documentation, GitHub Issues, Email support, Contributing guidelines.' }
+        ];
+
+        // Home page content
+        const homeContent = `
+            <div class="home-hero">
+                <h1>Okay Arcade Documentation</h1>
+                <p>Your complete guide to customizing and deploying your own gaming arcade website.</p>
+            </div>
+
+            <h2>Getting Started</h2>
+            <div class="cards-grid">
+                <div class="doc-card" onclick="loadPage('getting-started')">
+                    <i class="fas fa-rocket"></i>
+                    <h3>Quick Start Guide</h3>
+                    <p>Get up and running in 5 minutes with our step-by-step guide.</p>
+                </div>
+                <div class="doc-card" onclick="loadPage('installation')">
+                    <i class="fas fa-download"></i>
+                    <h3>Installation</h3>
+                    <p>Detailed installation instructions for all platforms.</p>
+                </div>
+                <div class="doc-card" onclick="loadPage('deployment')">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <h3>Deployment</h3>
+                    <p>Deploy to GitHub Pages, Netlify, or any hosting provider.</p>
+                </div>
+            </div>
+
+            <h2>Customization</h2>
+            <div class="cards-grid">
+                <div class="doc-card" onclick="loadPage('customization/adding-games')">
+                    <i class="fas fa-plus-circle"></i>
+                    <h3>Adding Games</h3>
+                    <p>Learn how to add your own games to the arcade.</p>
+                </div>
+                <div class="doc-card" onclick="loadPage('customization/branding')">
+                    <i class="fas fa-paint-brush"></i>
+                    <h3>Branding</h3>
+                    <p>Customize the name, colors, and appearance.</p>
+                </div>
+                <div class="doc-card" onclick="loadPage('customization/themes')">
+                    <i class="fas fa-palette"></i>
+                    <h3>Themes</h3>
+                    <p>Dark mode, light mode, and custom color schemes.</p>
+                </div>
+                <div class="doc-card" onclick="loadPage('customization/categories')">
+                    <i class="fas fa-folder"></i>
+                    <h3>Categories</h3>
+                    <p>Create and manage game categories.</p>
+                </div>
+            </div>
+
+            <h2>Editions</h2>
+            <div class="cards-grid">
+                <div class="doc-card" onclick="loadPage('editions/main')">
+                    <i class="fas fa-star"></i>
+                    <h3>Main Edition</h3>
+                    <p>Full-featured arcade with glassmorphism UI.</p>
+                </div>
+                <div class="doc-card" onclick="loadPage('editions/simple')">
+                    <i class="fas fa-minus-circle"></i>
+                    <h3>Simple UI</h3>
+                    <p>Clean, minimal design for fast loading.</p>
+                </div>
+                <div class="doc-card" onclick="loadPage('editions/terminal')">
+                    <i class="fas fa-terminal"></i>
+                    <h3>Terminal</h3>
+                    <p>Unique CLI-style gaming experience.</p>
+                </div>
+                <div class="doc-card" onclick="loadPage('editions/nogames')">
+                    <i class="fas fa-file"></i>
+                    <h3>No Games</h3>
+                    <p>Empty template to build from scratch.</p>
+                </div>
+            </div>
+
+            <h2>Advanced Topics</h2>
+            <div class="cards-grid">
+                <div class="doc-card" onclick="loadPage('advanced/pwa')">
+                    <i class="fas fa-wifi"></i>
+                    <h3>PWA & Offline</h3>
+                    <p>Enable offline support and PWA features.</p>
+                </div>
+                <div class="doc-card" onclick="loadPage('advanced/analytics')">
+                    <i class="fas fa-chart-bar"></i>
+                    <h3>Analytics</h3>
+                    <p>Track visitors with Google Analytics.</p>
+                </div>
+                <div class="doc-card" onclick="loadPage('advanced/custom-domain')">
+                    <i class="fas fa-globe"></i>
+                    <h3>Custom Domain</h3>
+                    <p>Use your own domain name.</p>
+                </div>
+                <div class="doc-card" onclick="loadPage('customization/seo')">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>SEO</h3>
+                    <p>Optimize for search engines.</p>
+                </div>
+            </div>
+        `;
+
+        // Load a documentation page
+        async function loadPage(page) {
+            const content = document.getElementById('content');
+            const links = document.querySelectorAll('.nav-link');
+
+            // Update active state
+            links.forEach(link => {
+                link.classList.remove('active');
+                if (link.dataset.page === page) {
+                    link.classList.add('active');
+                }
+            });
+
+            // Close mobile menu
+            document.getElementById('sidebar').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+
+            // Handle home page
+            if (page === 'home') {
+                content.innerHTML = homeContent;
+                return;
+            }
+
+            // Show loading
+            content.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i> Loading...</div>';
+
+            try {
+                // Fetch markdown file
+                const response = await fetch(`${page}.md`);
+                if (!response.ok) throw new Error('Page not found');
+                
+                const markdown = await response.text();
+                content.innerHTML = parseMarkdown(markdown);
+            } catch (error) {
+                content.innerHTML = `
+                    <div class="loading">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <p>Failed to load page. The file may not exist.</p>
+                    </div>
+                `;
+            }
+
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // Simple markdown parser
+        function parseMarkdown(md) {
+            let html = md;
+
+            // Code blocks
+            html = html.replace(/```(\w+)?\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>');
+
+            // Headers
+            html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+            html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+            html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+
+            // Bold
+            html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+
+            // Italic
+            html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+
+            // Inline code
+            html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+            // Links
+            html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+
+            // Unordered lists
+            html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
+            html = html.replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>');
+
+            // Ordered lists
+            html = html.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
+
+            // Blockquotes
+            html = html.replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>');
+
+            // Horizontal rules
+            html = html.replace(/^---$/gm, '<hr>');
+
+            // Paragraphs (wrap loose text)
+            html = html.replace(/^(?!<[a-z])((?!<).+)$/gm, '<p>$1</p>');
+
+            // Clean up empty paragraphs
+            html = html.replace(/<p><\/p>/g, '');
+
+            return html;
+        }
+
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        const searchResults = document.getElementById('searchResults');
+
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+
+            if (query.length < 2) {
+                searchResults.classList.remove('active');
+                return;
+            }
+
+            const results = searchIndex.filter(item => 
+                item.title.toLowerCase().includes(query) || 
+                item.content.toLowerCase().includes(query)
+            );
+
+            if (results.length === 0) {
+                searchResults.innerHTML = '<div class="search-result-item"><div class="title">No results found</div></div>';
+            } else {
+                searchResults.innerHTML = results.map(item => `
+                    <div class="search-result-item" onclick="loadPage('${item.page}'); searchResults.classList.remove('active'); searchInput.value = '';">
+                        <div class="title">${item.title}</div>
+                        <div class="preview">${item.content.substring(0, 80)}...</div>
+                    </div>
+                `).join('');
+            }
+
+            searchResults.classList.add('active');
+        });
+
+        // Close search results when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.search-box')) {
+                searchResults.classList.remove('active');
+            }
+        });
+
+        // Mobile menu toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        // Handle browser back/forward
+        window.addEventListener('popstate', (e) => {
+            if (e.state && e.state.page) {
+                loadPage(e.state.page);
+            }
+        });
+
+        // Initialize
+        loadPage('home');
+    </script>
 </body>
 </html>
