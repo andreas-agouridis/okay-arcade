@@ -74,96 +74,9 @@ Same as Main Edition but with an empty games array - perfect for building your o
 
 ## 🚀 Quick Start
 
-### Option 1: Download & Run
-```bash
-# Clone the repository
-git clone https://github.com/anomalyco/okay-arcade.git
-
-# Open in browser
-open index.html  # macOS
-start index.html # Windows
-xdg-open index.html # Linux
-```
-
-### Option 2: Local Server (Recommended)
-```bash
-# Python
-python -m http.server 8000
-
-# Node.js
-npx http-server
-
-# PHP
-php -S localhost:8000
-```
-
-Then visit `http://localhost:8000`
-
-### Option 3: Deploy to GitHub Pages
-1. Fork this repository
-2. Go to Settings → Pages
-3. Select `main` branch and `/ (root)` folder
-4. Your site will be at `https://yourusername.github.io/okay-arcade/`
-
----
-
-## 🎮 Adding Games
-
-Games are stored in a JavaScript array. Add your games like this:
-
-```javascript
-const games = [
-    {
-        name: "Game Name",
-        embedUrl: "https://game-url.com/embed",
-        imageUrl: "https://thumbnail-url.com/image.jpg",
-        category: "Action"
-    },
-    // Add more games...
-];
-```
-
-### Supported Categories
-- Action
-- Racing
-- Sports
-- Platformer
-- Runner
-- IO Games
-- *Add your own categories!*
-
-See the [Adding Games Guide](docs/customization/adding-games.md) for detailed instructions.
-
----
-
-## 🎨 Customization
-
-### Change Site Name
-Find and replace "Okay Arcade" throughout `index.html` with your site name.
-
-### Change Colors
-Edit CSS variables in the `:root` selector:
-
-```css
-:root {
-    --primary: #6c5ce7;      /* Main color */
-    --accent: #00cec9;       /* Accent color */
-    --gradient: linear-gradient(135deg, #6c5ce7, #00cec9);
-}
-```
-
-### Update URLs
-Replace all occurrences of:
-- `okay.agouridis.site` → your domain
-- `Andreas Agouridis` → your name
-
-See the [Customization Guide](docs/customization/branding.md) for more options.
-
----
-
 ## 📚 Documentation
 
-Complete documentation is available in the [`/docs`](docs/) folder:
+Complete documentation is available in the [`/docs`](docs/) folder or to [Official Docs Site](https://andreas-agouridis.github.io/okay-arcade/):
 
 ### Getting Started
 - [Quick Start Guide](docs/getting-started.md)
@@ -267,8 +180,8 @@ You are free to:
 ## 💬 Support
 
 - 📧 **Email**: mydreamz.agency@agouridis.tech
-- 🐛 **Issues**: [GitHub Issues](https://github.com/anomalyco/okay-arcade/issues)
-- 💬 **Discussions**: [GitHub Discussions](https://github.com/anomalyco/okay-arcade/discussions)
+- 🐛 **Issues**: [GitHub Issues](https://github.com/andreas-agouridis/okay-arcade/issues)
+- 💬 **Discussions**: [GitHub Discussions](https://github.com/andreas-agouridis/okay-arcade/discussions)
 - 🌐 **Website**: [okay.agouridis.site](https://okay.agouridis.site)
 
 ---
@@ -277,7 +190,7 @@ You are free to:
 
 If you find this project useful, please give it a star! It helps others discover the project.
 
-[![Star History Chart](https://api.star-history.com/svg?repos=anomalyco/okay-arcade&type=Date)](https://star-history.com/#anomalyco/okay-arcade&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=andreas-agouridis/okay-arcade&type=Date)](https://star-history.com/#andreas-agouridis/okay-arcade&Date)
 
 ---
 
