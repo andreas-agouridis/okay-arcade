@@ -175,7 +175,7 @@ You are free to:
 
 If you find this project useful, please give it a star! It helps others discover the project.
 
-[![Star History Chart](https://www.star-history.com/?repos=andreas-agouridis%2Fokay-arcade&type=date&legend=top-left)]
+<iframe style="width:100%;height:auto;min-width:600px;min-height:400px;" src="https://www.star-history.com/?repos=andreas-agouridis%2Fokay-arcade&type=date&legend=top-left" frameBorder="0"></iframe>
 
 ---
 
