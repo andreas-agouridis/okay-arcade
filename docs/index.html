@@ -774,8 +774,9 @@
             content.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i> Loading...</div>';
 
             try {
-                // Use relative path - works when index.html is in docs folder
-                const url = page + '.md';
+                // Build URL based on current location
+                const currentDir = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
+                const url = currentDir + page + '.md';
                 
                 const response = await fetch(url);
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -783,16 +784,24 @@
                 const markdown = await response.text();
                 content.innerHTML = parseMarkdown(markdown);
             } catch (error) {
-                content.innerHTML = `
-                    <div class="loading">
-                        <i class="fas fa-exclamation-circle"></i>
-                        <p>Failed to load documentation.</p>
-                        <p style="font-size: 0.85rem; margin-top: 15px; color: var(--text-muted);">
-                            Requested: ${page}.md<br>
-                            Current path: ${window.location.pathname}
-                        </p>
-                    </div>
-                `;
+                // Fallback: try direct relative path
+                try {
+                    const response = await fetch(page + '.md');
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    const markdown = await response.text();
+                    content.innerHTML = parseMarkdown(markdown);
+                } catch (e) {
+                    content.innerHTML = `
+                        <div class="loading">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <p>Could not load: ${page}.md</p>
+                            <p style="font-size: 0.85rem; margin-top: 15px; color: var(--text-muted);">
+                                Make sure docs are served from a web server.<br>
+                                Tip: Use <code>python -m http.server</code> or deploy to GitHub Pages.
+                            </p>
+                        </div>
+                    `;
+                }
             }
 
             // Scroll to top
