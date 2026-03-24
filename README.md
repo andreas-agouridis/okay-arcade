@@ -175,7 +175,7 @@ You are free to:
 
 If you find this project useful, please give it a star! It helps others discover the project.
 
-[![Star History Chart](https://api.star-history.com/svg?repos=andreas-agouridis/okay-arcade&type=Date)](https://star-history.com/#andreas-agouridis/okay-arcade&Date)
+[![Star History Chart](https://www.star-history.com/?repos=andreas-agouridis%2Fokay-arcade&type=date&legend=top-left)]
 
 ---
 
