@@ -5,11 +5,7 @@
 ### A Beautiful Free Online Gaming Arcade Template
 
 **Create your own gaming website in minutes - no coding required!**
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![GitHub Docs](https://img.shields.io/github/stars/anomalyco/okay-arcade.svg)](https://andreas-agouridis.github.io/okay-arcade/)
-
-[Live Demo](https://okay.agouridis.site) • [Documentation](https://okay.agouridis.site/docs) • [Report Bug](https://github.com/anomalyco/okay-arcade/issues) • [Request Feature](https://github.com/anomalyco/okay-arcade/issues)
+[Live Demo](https://okay.agouridis.site) • [Documentation](https://andreas-agouridis.github.io/okay-arcade/) • [Report Bug](https://github.com/andreas-agouridis/okay-arcade/issues) • [Request Feature](https://github.com/andreas-agouridis/okay-arcade/pulls)
 
 </div>
 
