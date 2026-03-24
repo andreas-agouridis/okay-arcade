@@ -5,6 +5,7 @@
 ### A Beautiful Free Online Gaming Arcade Template
 
 **Create your own gaming website in minutes - no coding required!**
+
 [Live Demo](https://okay.agouridis.site) • [Documentation](https://andreas-agouridis.github.io/okay-arcade/) • [Report Bug](https://github.com/andreas-agouridis/okay-arcade/issues) • [Request Feature](https://github.com/andreas-agouridis/okay-arcade/pulls)
 
 </div>
