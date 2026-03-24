@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🎮 Okay Arcade
+# Okay Arcade
 
 ### A Beautiful Free Online Gaming Arcade Template
 
@@ -12,7 +12,7 @@
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [Features](#-features)
 - [Editions](#-editions)
@@ -25,29 +25,29 @@
 
 ---
 
-## ✨ Features
+## Features
 
 | Feature | Description |
 |---------|-------------|
-| 🎨 **Beautiful UI** | Modern glassmorphism design with smooth animations |
-| 🌓 **Dark/Light Mode** | Toggle between dark and light themes |
-| 🔍 **Smart Search** | Instant search across all games |
-| 📂 **Categories** | Filter games by category |
-| ⭐ **Favorites** | Save your favorite games (localStorage) |
-| 📱 **Fully Responsive** | Works on desktop, tablet, and mobile |
-| 🔌 **Offline Support** | Works offline with service worker |
-| 🚀 **Fast & Lightweight** | Single HTML file, no dependencies |
-| 🔒 **SEO Optimized** | Meta tags, Open Graph, structured data |
-| 📦 **Multiple Editions** | Main, Simple UI, Terminal, No Games |
-| 🎮 **Game Modal** | Fullscreen gaming experience |
-| 🔔 **Toast Notifications** | Beautiful notification system |
-| 📄 **Legal Pages** | Privacy, Terms, Contact, About, FAQ |
-| 💾 **LocalStorage** | Persistent favorites and preferences |
-| ⌨️ **Keyboard Shortcuts** | ESC to close modals |
+| **Beautiful UI** | Modern glassmorphism design with smooth animations |
+| **Dark/Light Mode** | Toggle between dark and light themes |
+| **Smart Search** | Instant search across all games |
+| **Categories** | Filter games by category |
+| **Favorites** | Save your favorite games (localStorage) |
+| **Fully Responsive** | Works on desktop, tablet, and mobile |
+| **Offline Support** | Works offline with service worker |
+| **Fast & Lightweight** | Single HTML file, no dependencies |
+| **SEO Optimized** | Meta tags, Open Graph, structured data |
+| **Multiple Editions** | Main, Simple UI, Terminal, No Games |
+| **Game Modal** | Fullscreen gaming experience |
+| **Toast Notifications** | Beautiful notification system |
+| **Legal Pages** | Privacy, Terms, Contact, About, FAQ |
+| **LocalStorage** | Persistent favorites and preferences |
+| **Keyboard Shortcuts** | ESC to close modals |
 
 ---
 
-## 🎭 Editions
+## Editions
 
 Okay Arcade comes with **4 unique editions** to suit your needs:
 
@@ -72,9 +72,7 @@ Same as Main Edition but with an empty games array - perfect for building your o
 
 ---
 
-## 🚀 Quick Start
-
-## 📚 Documentation
+## Documentation
 
 Complete documentation is available in the [`/docs`](docs/) folder or to [Official Docs Site](https://andreas-agouridis.github.io/okay-arcade/):
 
@@ -109,7 +107,7 @@ Complete documentation is available in the [`/docs`](docs/) folder or to [Offici
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 okay-arcade/
@@ -135,7 +133,7 @@ okay-arcade/
 
 ---
 
-## 🛠️ Technologies
+## Technologies
 
 - **HTML5** - Semantic markup
 - **CSS3** - Modern styling with CSS variables, glassmorphism
@@ -146,7 +144,7 @@ okay-arcade/
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Here's how you can help:
 
@@ -165,7 +163,7 @@ Contributions are welcome! Here's how you can help:
 
 ---
 
-## 📝 License
+## License
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
@@ -177,16 +175,16 @@ You are free to:
 
 ---
 
-## 💬 Support
+## Support
 
-- 📧 **Email**: mydreamz.agency@agouridis.tech
-- 🐛 **Issues**: [GitHub Issues](https://github.com/andreas-agouridis/okay-arcade/issues)
-- 💬 **Discussions**: [GitHub Discussions](https://github.com/andreas-agouridis/okay-arcade/discussions)
-- 🌐 **Website**: [okay.agouridis.site](https://okay.agouridis.site)
+- **Email**: mydreamz.agency@agouridis.tech
+-  **Issues**: [GitHub Issues](https://github.com/andreas-agouridis/okay-arcade/issues)
+-  **Discussions**: [GitHub Discussions](https://github.com/andreas-agouridis/okay-arcade/discussions)
+-  **Website**: [okay.agouridis.site](https://okay.agouridis.site)
 
 ---
 
-## ⭐ Star History
+## Star History
 
 If you find this project useful, please give it a star! It helps others discover the project.
 
@@ -194,7 +192,7 @@ If you find this project useful, please give it a star! It helps others discover
 
 ---
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - [Font Awesome](https://fontawesome.com/) for icons
 - [Unsplash](https://unsplash.com/) for background images
