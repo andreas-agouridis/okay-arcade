@@ -12,19 +12,6 @@
 
 ---
 
-## Table of Contents
-
-- [Features](#-features)
-- [Editions](#-editions)
-- [Quick Start](#-quick-start)
-- [Customization](#-customization)
-- [Documentation](#-documentation)
-- [Contributing](#-contributing)
-- [License](#-license)
-- [Support](#-support)
-
----
-
 ## Features
 
 | Feature | Description |
