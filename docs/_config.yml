@@ -1,0 +1,39 @@
+# Jekyll configuration for GitHub Pages
+# This file is optional but recommended for GitHub Pages
+
+title: Okay Arcade Documentation
+description: Complete documentation for Okay Arcade - Free Online Gaming Arcade Template
+baseurl: "/okay-arcade"
+url: ""
+
+# Build settings
+markdown: kramdown
+
+# Theme (optional - GitHub Pages default theme)
+remote_theme: pages-themes/cayman@v0.2.0
+
+# Navigation
+header_pages:
+  - index.md
+  - getting-started.md
+  - customization/adding-games.md
+
+# Exclude files from build
+exclude:
+  - README.md
+  - LICENSE
+  - CHANGELOG.md
+  - node_modules
+  - vendor
+
+# Include hidden files
+include:
+  - _pages
+
+# Plugins
+plugins:
+  - jekyll-relative-links
+
+relative_links:
+  enabled: true
+  collections: true

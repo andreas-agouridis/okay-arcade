@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Okay Arcade - CLI Style</title>
+    <style>
+        /* Minimal - just for console-like display */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #0a0c10;
+            font-family: 'Courier New', 'Fira Code', monospace;
+            padding: 20px;
+            color: #00ff9d;
+        }
+        .console {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #0f1117;
+            border: 1px solid #2a2f3f;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .console-header {
+            background: #1a1e2a;
+            padding: 10px 16px;
+            border-bottom: 1px solid #2a2f3f;
+            color: #8b949e;
+            font-size: 13px;
+        }
+        .console-content {
+            padding: 20px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            line-height: 1.5;
+        }
+        .prompt {
+            color: #00ff9d;
+            margin: 16px 0 8px 0;
+        }
+        .prompt::before {
+            content: '$> ';
+            color: #569cd6;
+        }
+        .command-input {
+            background: #0f1117;
+            border: 1px solid #2a2f3f;
+            color: #00ff9d;
+            font-family: monospace;
+            font-size: 14px;
+            padding: 10px;
+            width: 100%;
+            margin-top: 8px;
+            border-radius: 4px;
+        }
+        .command-input:focus {
+            outline: none;
+            border-color: #00ff9d;
+        }
+        .game-item {
+            margin: 4px 0;
+            padding: 6px;
+            border-left: 2px solid #2a2f3f;
+        }
+        .game-item:hover {
+            background: #1a1e2a;
+            border-left-color: #00ff9d;
+        }
+        .help-text {
+            color: #8b949e;
+            margin: 8px 0;
+        }
+        .success {
+            color: #00ff9d;
+        }
+        .info {
+            color: #569cd6;
+        }
+        .warning {
+            color: #ffcc00;
+        }
+        hr {
+            border-color: #2a2f3f;
+            margin: 12px 0;
+        }
+        .stats {
+            color: #ff9d00;
+            margin: 8px 0;
+        }
+        button {
+            background: #1a1e2a;
+            border: 1px solid #2a2f3f;
+            color: #00ff9d;
+            padding: 6px 12px;
+            font-family: monospace;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-right: 8px;
+        }
+        button:hover {
+            background: #2a2f3f;
+        }
+        .game-list {
+            max-height: 400px;
+            overflow-y: auto;
+            margin: 12px 0;
+        }
+    </style>
+</head>
+<body>
+<div class="console">
+    <div class="console-header">
+        ═══ OKAY ARCADE · TERMINAL EDITION ═══
+        <span style="float: right;">[NO UI MODE]</span>
+    </div>
+    <div class="console-content" id="consoleOutput">
+        <div>╔════════════════════════════════════════╗</div>
+        <div>║   OKAY ARCADE - COMMAND LINE INTERFACE  ║</div>
+        <div>╚════════════════════════════════════════╝</div>
+        <div class="help-text" style="margin-top: 16px;">
+            > Type commands to play games. No graphics, no fluff.
+            > Available commands:
+        </div>
+        <div class="help-text">
+            &nbsp;&nbsp;list / ls          - show all available games<br>
+            &nbsp;&nbsp;play [number/name] - play a game by ID or name<br>
+            &nbsp;&nbsp;search [term]      - search games by keyword<br>
+            &nbsp;&nbsp;fav / favorites     - show your favorite games<br>
+            &nbsp;&nbsp;addfav [id/name]   - add game to favorites<br>
+            &nbsp;&nbsp;rmfav [id/name]    - remove from favorites<br>
+            &nbsp;&nbsp;random / r          - play random game<br>
+            &nbsp;&nbsp;filter [category]   - filter by: action, racing, puzzle, sports<br>
+            &nbsp;&nbsp;clear / cls         - clear screen<br>
+            &nbsp;&nbsp;stats / status      - show statistics<br>
+            &nbsp;&nbsp;help / ?            - show this help<br>
+            &nbsp;&nbsp;exit / quit         - (just clears, keep playing)
+        </div>
+        <hr>
+        <div id="gameListArea"></div>
+        <div id="outputArea"></div>
+        <div class="prompt">ready</div>
+    </div>
+    <div style="padding: 0 20px 20px 20px;">
+        <input type="text" id="commandInput" class="command-input" placeholder="Enter command... (e.g., 'list', 'play 1', 'search racing')" autofocus>
+        <div style="margin-top: 12px;">
+            <button id="btnList">📋 LIST</button>
+            <button id="btnRandom">🎲 RANDOM</button>
+            <button id="btnFavs">⭐ FAVS</button>
+            <button id="btnStats">📊 STATS</button>
+            <button id="btnClear">🗑️ CLEAR</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ==========================================
+    // GAME DATABASE - NO UI, JUST DATA
+    // ==========================================
+    const GAMES = [
+        { id: 1, name: "Neon Drifter", embedUrl: "https://www.crazygames.com/embed/neon-drifter", category: "Racing", plays: 1243 },
+        { id: 2, name: "Stickman Archer", embedUrl: "https://www.crazygames.com/embed/stickman-archer", category: "Action", plays: 892 },
+        { id: 3, name: "Cube Jump", embedUrl: "https://www.crazygames.com/embed/cube-jump", category: "Action", plays: 2103 },
+        { id: 4, name: "Parking Fury 3D", embedUrl: "https://www.crazygames.com/embed/parking-fury-3d", category: "Racing", plays: 567 },
+        { id: 5, name: "Bubble Shooter Pro", embedUrl: "https://www.crazygames.com/embed/bubble-shooter", category: "Puzzle", plays: 3441 },
+        { id: 6, name: "Basketball Stars", embedUrl: "https://www.crazygames.com/embed/basketball-stars", category: "Sports", plays: 1876 },
+        { id: 7, name: "Soccer Skills", embedUrl: "https://www.crazygames.com/embed/soccer-skills-world-cup", category: "Sports", plays: 954 },
+        { id: 8, name: "Block Puzzle Classic", embedUrl: "https://www.crazygames.com/embed/block-puzzle", category: "Puzzle", plays: 2678 },
+        { id: 9, name: "Shadow Fight 2", embedUrl: "https://www.crazygames.com/embed/shadow-fight-2", category: "Action", plays: 4321 },
+        { id: 10, name: "Moto X3M", embedUrl: "https://www.crazygames.com/embed/moto-x3m", category: "Racing", plays: 2890 },
+        { id: 11, name: "Sudoku Classic", embedUrl: "https://www.crazygames.com/embed/sudoku", category: "Puzzle", plays: 734 },
+        { id: 12, name: "Tennis Masters", embedUrl: "https://www.crazygames.com/embed/tennis-masters", category: "Sports", plays: 445 }
+    ];
+
+    // Local storage for favorites (store game IDs)
+    let favorites = JSON.parse(localStorage.getItem('okay_cli_favs') || '[]');
+    let currentFilter = 'all'; // 'all', 'action', 'racing', 'puzzle', 'sports'
+    let searchQuery = '';
+
+    // DOM elements
+    const commandInput = document.getElementById('commandInput');
+    const outputArea = document.getElementById('outputArea');
+    const gameListArea = document.getElementById('gameListArea');
+
+    // Helper: write to console output
+    function write(text, type = 'normal') {
+        const div = document.createElement('div');
+        div.style.margin = '4px 0';
+        div.style.fontFamily = 'monospace';
+        if (type === 'success') div.style.color = '#00ff9d';
+        else if (type === 'info') div.style.color = '#569cd6';
+        else if (type === 'warning') div.style.color = '#ffcc00';
+        else if (type === 'error') div.style.color = '#ff6b6b';
+        else div.style.color = '#cbd5e1';
+        div.textContent = text;
+        outputArea.appendChild(div);
+        div.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function clearOutput() {
+        outputArea.innerHTML = '';
+        write('▶ Screen cleared.', 'info');
+    }
+
+    // Get filtered games list based on category + search
+    function getFilteredGames() {
+        let games = [...GAMES];
+        
+        if (currentFilter !== 'all') {
+            games = games.filter(g => g.category.toLowerCase() === currentFilter.toLowerCase());
+        }
+        
+        if (searchQuery.trim() !== '') {
+            const query = searchQuery.toLowerCase();
+            games = games.filter(g => 
+                g.name.toLowerCase().includes(query) || 
+                g.category.toLowerCase().includes(query)
+            );
+        }
+        
+        return games;
+    }
+
+    // Display game list (text mode)
+    function displayGames() {
+        const filtered = getFilteredGames();
+        let html = '<div class="game-list">';
+        html += `<div class="stats">📁 Showing ${filtered.length} of ${GAMES.length} games`;
+        if (currentFilter !== 'all') html += ` | Filter: ${currentFilter.toUpperCase()}`;
+        if (searchQuery) html += ` | Search: "${searchQuery}"`;
+        html += '</div><hr>';
+        
+        if (filtered.length === 0) {
+            html += '<div class="warning">⚠️ No games match your criteria. Try "filter all" or clear search.</div>';
+        } else {
+            filtered.forEach(game => {
+                const isFav = favorites.includes(game.id);
+                const favStar = isFav ? '⭐' : '☆';
+                html += `<div class="game-item">
+                    [${game.id.toString().padStart(2)}] ${favStar} ${game.name.padEnd(22)} 
+                    <span style="color:#569cd6;">[${game.category}]</span>
+                    <span style="color:#8b949e; font-size:12px;"> ${game.plays} plays</span>
+                </div>`;
+            });
+        }
+        html += '<hr><div class="help-text">💡 Type: play [id] → e.g., "play 3" or "play Neon"</div>';
+        html += '</div>';
+        gameListArea.innerHTML = html;
+        
+        // add click handlers for game items
+        document.querySelectorAll('.game-item').forEach((item, idx) => {
+            item.style.cursor = 'pointer';
+            item.onclick = () => {
+                const idMatch = item.innerText.match(/\[(\d+)\]/);
+                if (idMatch) {
+                    const gameId = parseInt(idMatch[1]);
+                    const game = GAMES.find(g => g.id === gameId);
+                    if (game) playGameById(gameId);
+                }
+            };
+        });
+    }
+
+    // Play game by ID or name
+    function playGameById(id) {
+        const game = GAMES.find(g => g.id === id);
+        if (!game) {
+            write(`❌ Game with ID ${id} not found.`, 'error');
+            return false;
+        }
+        return launchGame(game);
+    }
+
+    function playGameByName(name) {
+        const game = GAMES.find(g => g.name.toLowerCase().includes(name.toLowerCase()));
+        if (!game) {
+            write(`❌ No game found matching "${name}"`, 'error');
+            return false;
+        }
+        return launchGame(game);
+    }
+
+    function launchGame(game) {
+        write(`\n🎮 LAUNCHING: ${game.name} (${game.category})`, 'success');
+        write(`🔗 Embed URL: ${game.embedUrl}`, 'info');
+        write(`💡 The game will open in a new tab/window (terminal mode uses external view)`, 'info');
+        
+        // Open game in new tab
+        window.open(game.embedUrl, '_blank');
+        
+        // Update play count locally
+        game.plays = (game.plays || 0) + 1;
+        write(`✅ Enjoy ${game.name}! Close tab to return here.`, 'success');
+        return true;
+    }
+
+    // Random game
+    function randomGame() {
+        const filtered = getFilteredGames();
+        if (filtered.length === 0) {
+            write('⚠️ No games available with current filters.', 'warning');
+            return;
+        }
+        const randomIndex = Math.floor(Math.random() * filtered.length);
+        const game = filtered[randomIndex];
+        write(`🎲 Random pick: ${game.name}`, 'info');
+        launchGame(game);
+    }
+
+    // Favorites management
+    function addFavorite(gameIdOrName) {
+        let game = null;
+        if (typeof gameIdOrName === 'number' || !isNaN(parseInt(gameIdOrName))) {
+            const id = parseInt(gameIdOrName);
+            game = GAMES.find(g => g.id === id);
+        } else {
+            game = GAMES.find(g => g.name.toLowerCase().includes(gameIdOrName.toLowerCase()));
+        }
+        
+        if (!game) {
+            write(`❌ Cannot find game: ${gameIdOrName}`, 'error');
+            return false;
+        }
+        
+        if (!favorites.includes(game.id)) {
+            favorites.push(game.id);
+            localStorage.setItem('okay_cli_favs', JSON.stringify(favorites));
+            write(`⭐ Added "${game.name}" to favorites.`, 'success');
+            displayGames();
+        } else {
+            write(`ℹ️ "${game.name}" is already in favorites.`, 'info');
+        }
+        return true;
+    }
+
+    function removeFavorite(gameIdOrName) {
+        let game = null;
+        if (typeof gameIdOrName === 'number' || !isNaN(parseInt(gameIdOrName))) {
+            const id = parseInt(gameIdOrName);
+            game = GAMES.find(g => g.id === id);
+        } else {
+            game = GAMES.find(g => g.name.toLowerCase().includes(gameIdOrName.toLowerCase()));
+        }
+        
+        if (!game) {
+            write(`❌ Cannot find game: ${gameIdOrName}`, 'error');
+            return false;
+        }
+        
+        const index = favorites.indexOf(game.id);
+        if (index !== -1) {
+            favorites.splice(index, 1);
+            localStorage.setItem('okay_cli_favs', JSON.stringify(favorites));
+            write(`🗑️ Removed "${game.name}" from favorites.`, 'success');
+            displayGames();
+        } else {
+            write(`ℹ️ "${game.name}" is not in your favorites.`, 'info');
+        }
+        return true;
+    }
+
+    function showFavorites() {
+        const favGames = GAMES.filter(g => favorites.includes(g.id));
+        if (favGames.length === 0) {
+            write('📭 No favorites yet. Use "addfav [id]" to add games.', 'warning');
+        } else {
+            write(`⭐ YOUR FAVORITES (${favGames.length} games):`, 'success');
+            favGames.forEach(g => {
+                write(`   ${g.id.toString().padStart(2)}. ${g.name} [${g.category}]`, 'info');
+            });
+            write('💡 Type "play [id]" to play any of these.', 'info');
+        }
+        displayGames();
+    }
+
+    // Statistics
+    function showStats() {
+        write('\n═══════════ GAME STATISTICS ═══════════', 'success');
+        write(`📊 Total games available: ${GAMES.length}`, 'info');
+        write(`⭐ Favorites saved: ${favorites.length}`, 'info');
+        
+        const categoryCount = {};
+        GAMES.forEach(g => { categoryCount[g.category] = (categoryCount[g.category] || 0) + 1; });
+        write(`\n📂 Games by category:`, 'info');
+        for (const [cat, count] of Object.entries(categoryCount)) {
+            write(`   • ${cat}: ${count} games`, 'normal');
+        }
+        
+        const mostPlayed = [...GAMES].sort((a,b) => b.plays - a.plays)[0];
+        if (mostPlayed) {
+            write(`\n🏆 Most played: ${mostPlayed.name} (${mostPlayed.plays} plays)`, 'success');
+        }
+        
+        write(`\n💾 Data saved locally in your browser.`, 'info');
+        write(`🎮 Type "help" for commands.\n`, 'info');
+    }
+
+    // Filter by category
+    function setFilter(category) {
+        const valid = ['all', 'action', 'racing', 'puzzle', 'sports'];
+        const catLower = category.toLowerCase();
+        if (valid.includes(catLower)) {
+            currentFilter = catLower;
+            searchQuery = '';
+            commandInput.value = '';
+            write(`🔍 Filter set to: ${currentFilter.toUpperCase()}`, 'success');
+            displayGames();
+        } else {
+            write(`❌ Invalid filter. Options: all, action, racing, puzzle, sports`, 'error');
+        }
+    }
+
+    // Search
+    function searchGames(query) {
+        if (!query.trim()) {
+            write('❌ Please provide a search term.', 'warning');
+            return;
+        }
+        searchQuery = query.trim();
+        currentFilter = 'all';
+        write(`🔎 Searching for: "${searchQuery}"`, 'info');
+        displayGames();
+        const results = getFilteredGames();
+        write(`📋 Found ${results.length} matching game(s).`, 'success');
+    }
+
+    function clearSearch() {
+        searchQuery = '';
+        currentFilter = 'all';
+        write('🧹 Search cleared, showing all games.', 'info');
+        displayGames();
+    }
+
+    // Process command
+    function processCommand(cmd) {
+        const trimmed = cmd.trim().toLowerCase();
+        if (trimmed === '') return;
+        
+        const parts = trimmed.split(/\s+/);
+        const action = parts[0];
+        const arg = parts.slice(1).join(' ');
+        
+        // Help
+        if (action === 'help' || action === '?' || action === 'h') {
+            write('\n╔══════════════════════════════════════════╗', 'success');
+            write('║  OKAY ARCADE - TEXT MODE COMMANDS       ║', 'success');
+            write('╚══════════════════════════════════════════╝', 'success');
+            write(' list / ls       - show all games', 'info');
+            write(' play [id/name]  - play game (e.g., play 3, play neon)', 'info');
+            write(' random / r      - play random game', 'info');
+            write(' search [word]   - search games', 'info');
+            write(' fav / favorites - show favorites', 'info');
+            write(' addfav [id/name]- add to favorites', 'info');
+            write(' rmfav [id/name] - remove from favorites', 'info');
+            write(' filter [cat]    - filter by: action, racing, puzzle, sports, all', 'info');
+            write(' stats / status  - show statistics', 'info');
+            write(' clear / cls     - clear terminal output', 'info');
+            write(' help            - show this menu', 'info');
+            return;
+        }
+        
+        // List games
+        if (action === 'list' || action === 'ls') {
+            displayGames();
+            return;
+        }
+        
+        // Play game
+        if (action === 'play') {
+            if (!arg) {
+                write('❌ Usage: play [game ID or name]', 'error');
+                write('   Example: play 3   or   play "neon drifter"', 'info');
+                return;
+            }
+            // Try as number first
+            const asNum = parseInt(arg);
+            if (!isNaN(asNum)) {
+                playGameById(asNum);
+            } else {
+                playGameByName(arg);
+            }
+            return;
+        }
+        
+        // Random
+        if (action === 'random' || action === 'r') {
+            randomGame();
+            return;
+        }
+        
+        // Search
+        if (action === 'search') {
+            if (!arg) {
+                write('❌ Usage: search [keyword]', 'error');
+                return;
+            }
+            searchGames(arg);
+            return;
+        }
+        
+        // Favorites show
+        if (action === 'fav' || action === 'favorites') {
+            showFavorites();
+            return;
+        }
+        
+        // Add favorite
+        if (action === 'addfav') {
+            if (!arg) {
+                write('❌ Usage: addfav [game ID or name]', 'error');
+                return;
+            }
+            const asNum = parseInt(arg);
+            if (!isNaN(asNum)) addFavorite(asNum);
+            else addFavorite(arg);
+            return;
+        }
+        
+        // Remove favorite
+        if (action === 'rmfav' || action === 'removefav') {
+            if (!arg) {
+                write('❌ Usage: rmfav [game ID or name]', 'error');
+                return;
+            }
+            const asNum = parseInt(arg);
+            if (!isNaN(asNum)) removeFavorite(asNum);
+            else removeFavorite(arg);
+            return;
+        }
+        
+        // Filter
+        if (action === 'filter') {
+            if (!arg) {
+                write(`Current filter: ${currentFilter}`, 'info');
+                write('Available: all, action, racing, puzzle, sports', 'help-text');
+                return;
+            }
+            setFilter(arg);
+            return;
+        }
+        
+        // Stats
+        if (action === 'stats' || action === 'status') {
+            showStats();
+            return;
+        }
+        
+        // Clear screen
+        if (action === 'clear' || action === 'cls') {
+            clearOutput();
+            return;
+        }
+        
+        // Exit / quit - just clear and show message
+        if (action === 'exit' || action === 'quit') {
+            write('👋 Type "list" to see games or "help" for commands.', 'info');
+            clearOutput();
+            return;
+        }
+        
+        write(`❌ Unknown command: ${action}. Type "help" for available commands.`, 'error');
+    }
+
+    // Handle command input
+    function handleCommand() {
+        const cmd = commandInput.value;
+        if (!cmd.trim()) return;
+        
+        // Echo command
+        write(`\n> ${cmd}`, 'info');
+        processCommand(cmd);
+        commandInput.value = '';
+        commandInput.focus();
+    }
+    
+    // Reset & initial display
+    function init() {
+        displayGames();
+        write('\n✅ TERMINAL MODE ACTIVE — No UI, pure command line', 'success');
+        write('📌 Type "help" for commands or click buttons above.\n', 'info');
+        commandInput.focus();
+    }
+    
+    // Event listeners
+    commandInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleCommand();
+    });
+    
+    document.getElementById('btnList').onclick = () => { displayGames(); commandInput.focus(); };
+    document.getElementById('btnRandom').onclick = () => { randomGame(); commandInput.focus(); };
+    document.getElementById('btnFavs').onclick = () => { showFavorites(); commandInput.focus(); };
+    document.getElementById('btnStats').onclick = () => { showStats(); commandInput.focus(); };
+    document.getElementById('btnClear').onclick = () => { clearOutput(); commandInput.focus(); };
+    
+    init();
+</script>
+</body>
+</html>
