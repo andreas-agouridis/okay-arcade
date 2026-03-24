@@ -774,9 +774,11 @@
             content.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i> Loading...</div>';
 
             try {
-                // Fetch markdown file
-                const response = await fetch(`${page}.md`);
-                if (!response.ok) throw new Error('Page not found');
+                // Use relative path - works when index.html is in docs folder
+                const url = page + '.md';
+                
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
                 
                 const markdown = await response.text();
                 content.innerHTML = parseMarkdown(markdown);
@@ -784,7 +786,11 @@
                 content.innerHTML = `
                     <div class="loading">
                         <i class="fas fa-exclamation-circle"></i>
-                        <p>Failed to load page. The file may not exist.</p>
+                        <p>Failed to load documentation.</p>
+                        <p style="font-size: 0.85rem; margin-top: 15px; color: var(--text-muted);">
+                            Requested: ${page}.md<br>
+                            Current path: ${window.location.pathname}
+                        </p>
                     </div>
                 `;
             }
