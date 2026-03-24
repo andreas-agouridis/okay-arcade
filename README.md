@@ -7,10 +7,7 @@
 **Create your own gaming website in minutes - no coding required!**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![GitHub Stars](https://img.shields.io/github/stars/anomalyco/okay-arcade.svg)](https://github.com/anomalyco/okay-arcade/stargazers)
-[![GitHub Forks](https://img.shields.io/github/forks/anomalyco/okay-arcade.svg)](https://github.com/anomalyco/okay-arcade/network)
-[![GitHub Issues](https://img.shields.io/github/issues/anomalyco/okay-arcade.svg)](https://github.com/anomalyco/okay-arcade/issues)
-[![Website](https://img.shields.io/website?url=https://okay.agouridis.site)](https://okay.agouridis.site)
+[![GitHub Docs](https://img.shields.io/github/stars/anomalyco/okay-arcade.svg)](https://andreas-agouridis.github.io/okay-arcade/)
 
 [Live Demo](https://okay.agouridis.site) • [Documentation](https://okay.agouridis.site/docs) • [Report Bug](https://github.com/anomalyco/okay-arcade/issues) • [Request Feature](https://github.com/anomalyco/okay-arcade/issues)
 
